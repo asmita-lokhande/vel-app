@@ -1,0 +1,29 @@
+pipeline {
+	agent {
+		label { 
+						label "built-in"
+				customWorkspace "/mnt/job1"
+}
+	}
+	stages {
+	        stage ("clone") {
+	        steps { 
+	                 sh "rm -rf /mnt/job1/* "
+	        		sh "yum install git -y"
+	        		sh "git clone https://github.com/asmita-lokhande/asmita.git"
+	        		
+	        	}
+	        }
+                                     stage ("deploy_on_httpd") {
+	            steps {
+	         sh "yum install httpd -y"
+	         sh "systemctl start httpd"
+	         sh "cp -r /mnt/job1/asmita/index.html  /var/www/html"
+	         sh "chmod -R 777 /var/www/html/index.html"
+	         sh "service httpd start"
+	         
+                           }
+	        }
+	    }
+	}
+
